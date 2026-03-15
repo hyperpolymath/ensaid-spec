@@ -1,0 +1,172 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+= eNSAID Section 09: Translation Honesty Vocabulary
+Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+:version: 0.1.0
+:status: Draft
+:toc: left
+:toclevels: 3
+
+== Abstract
+
+This section defines a four-level vocabulary for expressing the honesty and confidence of translations performed by an eNSAID environment. When the environment translates code, constraints, or semantic packs between representations, backends, or languages, it MUST communicate the fidelity of the translation to the operator. The four levels are: Exact, Conservative, Heuristic, and Refused.
+
+== Motivation
+
+A neurosymbolic development environment frequently translates between representations: constraint expressions to validation code, panel contracts to deployment manifests, type systems to runtime checks. Not all translations preserve full semantic meaning. Some are exact equivalences; others are lossy approximations; others are AI-generated candidates requiring human validation.
+
+Without a formal honesty vocabulary, the operator cannot distinguish a provably-correct translation from a best-guess heuristic. The translation honesty vocabulary makes the fidelity of every translation explicit, preventing false confidence in machine-generated output.
+
+== Specification
+
+=== S09-1: Translation Status Levels
+
+A conforming eNSAID environment MUST support the following four translation status levels:
+
+==== Exact
+
+[cols="1,3"]
+|===
+| Field | Value
+
+| ID
+| `exact`
+
+| Display Name
+| Exact
+
+| UI Colour (Default)
+| Green
+
+| Definition
+| The environment has a declared semantic pack and a backend binding that preserves the intended meaning within that pack.
+
+| Required Evidence
+| Theory pack identifier, backend identifier, and a binding proof or policy.
+
+| Operator Message
+| "This target preserves the declared semantics for this pack."
+|===
+
+An Exact translation means the environment can demonstrate (by proof or by policy) that the source and target representations carry the same semantic content.
+
+==== Conservative
+
+[cols="1,3"]
+|===
+| Field | Value
+
+| ID
+| `conservative`
+
+| Display Name
+| Conservative
+
+| UI Colour (Default)
+| Blue
+
+| Definition
+| The environment has translated safely by restricting or weakening the original semantics.
+
+| Required Evidence
+| Theory pack identifier, backend identifier, and a declaration of semantic losses.
+
+| Operator Message
+| "This target is safe to use, but it is not semantically identical; some meaning has been restricted."
+|===
+
+A Conservative translation preserves safety: nothing incorrect is introduced, but some capability or expressiveness may be lost. The environment MUST declare what was lost.
+
+==== Heuristic
+
+[cols="1,3"]
+|===
+| Field | Value
+
+| ID
+| `heuristic`
+
+| Display Name
+| Heuristic
+
+| UI Colour (Default)
+| Amber
+
+| Definition
+| The environment has used search, inference, or model assistance to propose a translation that must be validated downstream.
+
+| Required Evidence
+| Generator identifier and validation target.
+
+| Operator Message
+| "This translation is a candidate, not a trusted equivalence. Validation is required."
+|===
+
+A Heuristic translation is an AI-generated or search-derived candidate. It MAY be correct but carries no formal guarantee. The environment MUST mark it as requiring validation and MUST NOT present it as equivalent to an Exact or Conservative translation.
+
+==== Refused
+
+[cols="1,3"]
+|===
+| Field | Value
+
+| ID
+| `refused`
+
+| Display Name
+| Refused
+
+| UI Colour (Default)
+| Red
+
+| Definition
+| The environment will not translate because it cannot justify the semantics.
+
+| Required Evidence
+| Reason code.
+
+| Operator Message
+| "The environment refused to translate this because it cannot do so honestly."
+|===
+
+A Refused status means the environment has determined that no honest translation is possible. This is preferable to silently producing an incorrect translation.
+
+=== S09-2: Status Application
+
+A conforming environment MUST assign a translation status level to every translation it performs. The status MUST be:
+
+* Visible to the operator at the point of use (not buried in logs).
+* Machine-readable (for consumption by Phase 3 constraint evaluation).
+* Immutable once assigned (the status of a specific translation instance does not change; a new translation produces a new status).
+
+=== S09-3: Status Progression
+
+Translation statuses do not form a progression. An environment MUST NOT automatically promote a Heuristic translation to Conservative or Exact based on the passage of time or the absence of complaints. Promotion requires:
+
+* For Heuristic -> Conservative: explicit declaration of semantic losses and evidence of safety.
+* For Heuristic -> Exact: formal proof or binding policy.
+* For Conservative -> Exact: resolution of declared semantic losses.
+
+=== S09-4: UI Presentation
+
+A conforming environment MUST display translation statuses using a consistent colour scheme. The default colours (Green, Blue, Amber, Red) MAY be adjusted for accessibility palettes but MUST NOT swap meanings between palettes.
+
+The environment SHOULD display translation status inline (next to the translated artifact) rather than requiring navigation to a separate view.
+
+== Conformance
+
+An eNSAID implementation conforms to this section if it:
+
+1. Assigns one of the four translation status levels to every translation.
+2. Makes translation status visible to the operator at the point of use.
+3. Does not automatically promote Heuristic translations without evidence.
+4. Refuses translations when no honest translation is possible.
+
+== Reference Implementation
+
+PanLL implements the translation honesty vocabulary with:
+
+* `.machine_readable/TRANSLATION_STATUS.scm` -- Schema definition with 4 status levels, evidence requirements, and UI colour assignments.
+* Translation status display in Panel-W when viewing translated artifacts.
+* Integration with TypeLL type checking: TypeLL bridges report their translation honesty level per type judgement.

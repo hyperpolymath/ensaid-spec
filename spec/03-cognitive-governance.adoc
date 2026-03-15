@@ -1,0 +1,202 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+= eNSAID Section 03: Cognitive Governance Stack
+Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+:version: 0.1.0
+:status: Draft
+:toc: left
+:toclevels: 3
+
+== Abstract
+
+This section defines the Cognitive Governance Stack: four interconnected systems that monitor and regulate the cognitive dynamics of Human-Machine co-orbit. The stack ensures that the Binary Star architecture does not overwhelm the Human Operator or allow the Machine Agent to corrupt the shared workspace.
+
+== Motivation
+
+Co-orbit increases cognitive load. The Human Operator must simultaneously monitor their own work (Panel-L), the Machine's reasoning (Panel-N), and the shared output (Panel-W). Without governance, this leads to cognitive overload, missed errors, or disengagement. The Cognitive Governance Stack provides automated monitoring and adaptive response to maintain productive co-orbit.
+
+== Specification
+
+=== S03-1: Anti-Crash Gate
+
+A conforming eNSAID environment MUST implement an Anti-Crash Gate: a circuit breaker positioned between Panel-N (Machine output) and Panel-W (shared workspace).
+
+==== Requirements
+
+* Every Machine-generated token MUST pass through the Anti-Crash Gate before appearing in Panel-W.
+* The Gate MUST validate each token against the active constraints declared in Panel-L.
+* If validation passes, the token MUST be marked as validated and forwarded to Panel-W.
+* If validation fails, the token MUST be blocked and the environment MUST notify the Human Operator with:
+** The rejected token content.
+** The constraint(s) that were violated.
+** The reason for rejection.
+* The Human Operator MUST be presented with at least the following response options:
+** Reject the token (discard it).
+** Override the constraint (allow the token through, logging the override).
+** Refine the constraint (modify the constraint to accommodate the token).
+
+==== Validation Algorithm
+
+The specification does not mandate a specific validation algorithm. Conforming implementations MAY use:
+
+* Substring or pattern matching (minimum viable).
+* Regular expression evaluation.
+* Formal verification (SMT solvers, property-based testing).
+* Machine learning classifiers (trained on operator feedback).
+
+The implementation MUST document the validation approach used and its known limitations.
+
+=== S03-2: Vexometer
+
+A conforming eNSAID environment MUST implement a Vexometer: a friction monitor that tracks Human Operator stress indicators.
+
+==== Measurement
+
+The Vexometer MUST compute a Vexation Index in the range [0.0, 1.0] from at least the following signals:
+
+[cols="1,3"]
+|===
+| Signal | Description
+
+| Cancellations
+| Number of actions the operator starts and then cancels.
+
+| Corrections
+| Number of times the operator overrides or modifies Machine output.
+
+| Dwell time
+| Prolonged inaction (hovering, scrolling without action, idle cursor).
+|===
+
+A conforming implementation MAY incorporate additional stress signals (typing speed variance, undo frequency, constraint thrashing).
+
+==== Response
+
+When the Vexation Index crosses a threshold (implementation-defined, RECOMMENDED default: 0.7), the environment SHOULD trigger anti-inflammatory UI adjustments. The specific adjustments are defined by Information Humidity (S03-3).
+
+The Vexation Index MUST be visible to the operator at all times (e.g., as a gauge, indicator, or ambient visual element).
+
+=== S03-3: Information Humidity
+
+A conforming eNSAID environment SHOULD implement Information Humidity: an adaptive UI density system driven by operator stress level.
+
+==== Humidity Levels
+
+[cols="1,1,3"]
+|===
+| Level | Trigger | Behaviour
+
+| High humidity
+| Low stress (Vexation Index < 0.3)
+| Show more detail: tooltips, hints, expanded views, optional information.
+
+| Normal humidity
+| Moderate stress (Vexation Index 0.3 -- 0.7)
+| Standard information density.
+
+| Low humidity
+| High stress (Vexation Index > 0.7)
+| Shed visual noise: hide optional elements, show essential information only, reduce animations, simplify layouts.
+|===
+
+==== Design Principle
+
+Information Humidity is inspired by responsive design but driven by cognitive load rather than screen size. The amount of information presented adapts to the operator's capacity to process it, not the physical display area.
+
+A conforming implementation MUST allow the operator to override humidity adjustments manually.
+
+=== S03-4: Orbital Drift Aura
+
+A conforming eNSAID environment SHOULD implement an Orbital Drift Aura: an ambient visual indicator showing system stability.
+
+==== Requirements
+
+* The Aura MUST be visible without looking at any specific panel or widget (e.g., background colour shift, border glow, or peripheral indicator).
+* The Aura MUST reflect the combined state of: Anti-Crash Gate pass/fail rate, Vexation Index, and orbital stability sigma (Section 01).
+* The Aura MUST NOT require active inspection -- it is designed for peripheral perception.
+
+=== S03-5: Feedback Loop
+
+The four governance systems MUST feed into each other in a coherent loop:
+
+----
+Operator actions --> Vexometer (friction measurement)
+                         |
+                         v
+                  Information Humidity (UI adaptation)
+                         |
+                         v
+                  Orbital Drift Aura (ambient stability)
+                         |
+                         v
+                  Anti-Crash Gate (constraint enforcement)
+                         |
+                         v
+                  Operator sees results --> (loop)
+----
+
+Operator corrections recorded by the Anti-Crash Gate MUST increment the Vexometer's correction count. High Vexation Index MUST trigger humidity adjustments. Orbital Drift Aura MUST reflect the aggregate system state.
+
+=== S03-6: Code Provenance
+
+A conforming eNSAID environment SHOULD implement a code provenance system that assigns trust levels to code regions based on authorship.
+
+==== Trust Levels
+
+[cols="1,1,3,2"]
+|===
+| Level | Colour (Default) | Meaning | Detection Method
+
+| Verified
+| Green
+| Formally verified, proof-checked, no unsafe escape hatches.
+| Proof markers in commit metadata.
+
+| Human-Reviewed
+| Blue
+| Human author or human commit after AI generation.
+| No AI co-author, or subsequent human commit.
+
+| AI-Assisted
+| Amber
+| Co-authored with AI, no subsequent human review.
+| Co-Authored-By header present, no later human commit.
+
+| Unreviewed AI
+| Red
+| Pure AI output, no human in the review chain.
+| AI author, no human review detected.
+
+| Unknown
+| Grey
+| No attribution data available (pre-git or missing blame).
+| No blame data.
+|===
+
+==== Accessibility
+
+Colour assignments MUST support multiple accessibility palettes (RECOMMENDED minimum: Standard, Deuteranopia, Protanopia, High Contrast). Colours MAY change hues across palettes but MUST NOT change meanings. Green always means "verified" regardless of the actual hue displayed.
+
+==== Hostile UX for Unreviewed AI
+
+A conforming implementation SHOULD apply hostile UX (visual friction such as pulsing borders) to Unreviewed AI code regions. The operator MUST be able to suppress hostile UX, but the suppression action itself SHOULD be visible and logged.
+
+== Conformance
+
+An eNSAID implementation conforms to this section if it:
+
+1. Implements an Anti-Crash Gate that validates all Machine tokens against Panel-L constraints.
+2. Implements a Vexometer that tracks at least cancellations, corrections, and dwell time.
+3. Makes the Vexation Index continuously visible to the operator.
+4. Allows the operator to reject, override, or refine constraints when the Gate blocks a token.
+
+== Reference Implementation
+
+PanLL implements the Cognitive Governance Stack with:
+
+* Anti-Crash Gate via the `validate_inference` Tauri command.
+* Vexometer via `record_vexation_event` and `get_vexation_index` Tauri commands.
+* Information Humidity in `HumidityEngine.res`.
+* Orbital Drift as background colour shift in the main application frame.
+* Code Provenance Map with Qubes-style trust colouring and 4 accessibility palettes.

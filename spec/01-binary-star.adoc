@@ -1,0 +1,120 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+= eNSAID Section 01: Binary Star Architecture
+Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+:version: 0.1.0
+:status: Draft
+:toc: left
+:toclevels: 3
+
+== Abstract
+
+This section defines the Binary Star architecture, the foundational interaction model for eNSAID-compliant environments. The Binary Star models the relationship between Human Operator and Machine Agent as two gravitationally bound entities orbiting a shared Barycentre (the task or artifact), with neither party subordinate to the other.
+
+== Motivation
+
+Traditional IDEs treat AI as a subordinate tool: an autocomplete engine, a chatbot in a sidebar, or a code generation assistant invoked on command. This creates an asymmetric relationship where the human drives and the machine responds.
+
+As AI agents become capable of sustained autonomous reasoning, this subordination model introduces friction. The human must constantly interrupt the agent's reasoning loop to provide direction, and the agent cannot signal when the human's constraints are contradictory or incomplete.
+
+The Binary Star architecture eliminates this asymmetry by treating Human and Machine as peers in a shared gravitational system.
+
+== Specification
+
+=== S01-1: Binary Star Model
+
+A conforming eNSAID environment MUST model the Human-Machine relationship as a Binary Star system with the following properties:
+
+[horizontal]
+Human Star:: The symbolic entity. Provides constraints, goals, domain knowledge, and value judgements. Represented as the source of symbolic mass in the system.
+
+Machine Star:: The neural entity. Provides inference, pattern recognition, generation, and autonomous reasoning. Represented as the source of neural mass in the system.
+
+Barycentre:: The shared centre of mass around which both stars orbit. Represents the current task, artifact, or workspace state. Neither star owns the Barycentre; both contribute to it.
+
+=== S01-2: Non-Subordination Principle
+
+A conforming environment MUST NOT treat either the Human or Machine as inherently primary. Specifically:
+
+* The Machine MUST be able to operate autonomously within declared constraints without requiring human approval for every action.
+* The Human MUST be able to observe Machine reasoning in real-time without interrupting it.
+* Both parties MUST have the ability to modify shared workspace state (the Barycentre), subject to governance rules defined in <<eNSAID Section 03: Cognitive Governance Stack>>.
+
+=== S01-3: Autonomy Level
+
+A conforming environment MUST track the Machine's autonomy level as a continuous value in the range [0.0, 1.0]:
+
+[cols="1,3"]
+|===
+| Value | Meaning
+
+| 0.0
+| Fully instructed. The Human guides every action.
+
+| 0.5
+| Shared autonomy. The Human sets goals; the Machine chooses tactics.
+
+| 1.0
+| Fully autonomous. The Machine operates independently within declared constraints.
+|===
+
+The environment MUST make the current autonomy level visible to the Human Operator at all times.
+
+=== S01-4: Orbital Stability
+
+A conforming environment SHOULD track orbital stability as a metric (sigma) in the range [0.0, 1.0], calculated from:
+
+* Validation pass rate (how often Machine output satisfies constraints)
+* Vexation index (Human friction level, see Section 03)
+* Autonomy level coherence (whether autonomy level matches task demands)
+
+The environment SHOULD provide ambient visual feedback indicating orbital stability without requiring the operator to inspect a specific panel or widget.
+
+[cols="1,2"]
+|===
+| Sigma | Interpretation
+
+| > 0.8
+| Stable co-orbit. Both parties synchronised.
+
+| 0.5 -- 0.8
+| Mild drift. Attention recommended.
+
+| < 0.5
+| Significant drift. Intervention likely needed.
+|===
+
+=== S01-5: OODA Loop Visibility
+
+When the Machine Agent uses an OODA (Observe-Orient-Decide-Act) decision-making loop or equivalent, a conforming environment SHOULD make the current phase visible to the Human Operator. The four phases are:
+
+[horizontal]
+Observe:: Gather information from the environment (constraints, workspace state).
+Orient:: Analyse the situation and update the internal model.
+Decide:: Choose an action based on constraints and goals.
+Act:: Generate output and submit it for validation.
+
+=== S01-6: Last Operator Input Tracking
+
+A conforming environment MUST track the timestamp of the last Human Operator input. This timestamp feeds into autonomy level management and orbital stability calculation. Prolonged absence of operator input (the threshold is implementation-defined) SHOULD trigger a visible indicator that the Machine is operating without recent human engagement.
+
+== Conformance
+
+An eNSAID implementation conforms to this section if it:
+
+1. Models the Human-Machine interaction as a non-subordinate co-orbit system.
+2. Tracks and displays Machine autonomy level.
+3. Does not require human approval for every Machine action when autonomy level is above 0.0.
+4. Provides real-time visibility into Machine reasoning state.
+
+== Reference Implementation
+
+PanLL implements the Binary Star architecture with:
+
+* Panel-L (Symbolic Mass / Human Star) for constraints and rules.
+* Panel-N (Neural Stream / Machine Star) for inference and reasoning.
+* Panel-W (World / Barycentre) for shared workspace output.
+* Autonomy tracking via `autonomyLevel` (0.0--1.0) in the agency state model.
+* OODA phase display in Panel-N showing Observe/Orient/Decide/Act states.
+* Orbital stability sigma calculated from validation pass rate, vexation index, and autonomy coherence.

@@ -1,0 +1,120 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+= eNSAID Section 06: Panel Taxonomy (Cladistic Classification)
+Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+:version: 0.1.0
+:status: Draft
+:toc: left
+:toclevels: 3
+
+== Abstract
+
+This section defines a cladistic (Linnaean-style) classification system for eNSAID panels. The taxonomy organises panels into a hierarchical tree with seven levels, from Kingdom (broadest) to Species (individual panel). Crucially, the taxonomy includes empty branches -- specification slots that describe panels that do not yet exist but could be built.
+
+== Motivation
+
+A growing panel catalogue requires organisation that invites contribution. A flat list of panels does not reveal gaps or relationships. A cladistic hierarchy with visible empty branches shows contributors where panels are missing and what properties those panels should have. Empty nodes are not stubs; they are specification slots with metadata describing the expected panel's Panel-L/N/W mapping, suggested backend, and purpose.
+
+== Specification
+
+=== S06-1: Taxonomy Levels
+
+A conforming eNSAID environment MUST organise its panel catalogue using a hierarchical classification with at least the following levels:
+
+[cols="1,3,3"]
+|===
+| Level | Description | Example
+
+| Kingdom
+| Broadest functional domain.
+| Development, Operations, Governance, Analysis
+
+| Phylum
+| Major subdomain.
+| Security, Languages, Databases, Infrastructure
+
+| Class
+| Functional category.
+| Static Analysis, Runtime Monitoring, Formal Verification
+
+| Order
+| Specific concern.
+| Vulnerability Scanning, Compliance Audit, Dependency Audit
+
+| Family
+| Narrower grouping.
+| Web Security, Network Security, Supply Chain
+
+| Genus
+| Near-specific category.
+| Cloudflare Management, WordPress Hardening
+
+| Species
+| Individual panel.
+| CloudGuard, Wharf
+|===
+
+=== S06-2: Empty Branch Visibility
+
+A conforming environment MUST make empty branches (nodes with no implemented panels) visible in the taxonomy browser. Empty branches MUST NOT be hidden or collapsed by default.
+
+Each empty branch MUST include the following metadata:
+
+[cols="1,3"]
+|===
+| Field | Description
+
+| Description
+| What a panel at this node would do.
+
+| Expected Panel-L/N/W mapping
+| Which primary panels it would relate to.
+
+| Suggested backend
+| Whether it would need a native, container, or remote backend.
+
+| Suggested isolation tier
+| The recommended isolation tier.
+
+| Difficulty estimate
+| Approximate complexity for a contributor (optional).
+|===
+
+Empty branches serve as invitations to contributors. They say: "this panel does not exist yet, here is what it would look like."
+
+=== S06-3: Classification Requirements
+
+Every panel registered in a conforming environment MUST be classified at the Species level. The classification MUST include:
+
+* The full path from Kingdom to Species.
+* The panel's relationship to sibling Species in the same Genus.
+* Any cross-cutting relationships (panels that appear in multiple branches).
+
+=== S06-4: Taxonomy Extensibility
+
+The taxonomy MUST be extensible. Contributors MUST be able to:
+
+* Propose new branches at any level.
+* Reclassify existing panels (with appropriate governance review).
+* Add metadata to empty branches to refine the specification slot.
+
+The taxonomy SHOULD be versioned. Changes to the taxonomy structure (adding or removing levels, renaming branches) SHOULD follow a governance process.
+
+== Conformance
+
+An eNSAID implementation conforms to this section if it:
+
+1. Organises panels in a hierarchical classification with at least 4 levels.
+2. Makes empty branches visible with descriptive metadata.
+3. Classifies every registered panel at the leaf level.
+4. Allows contributors to propose new branches.
+
+== Reference Implementation
+
+PanLL implements the panel taxonomy with:
+
+* `panel-clades/` directory containing clade manifests (`config.k9.ncl` per clade).
+* 90+ clade definitions covering Development, Operations, Governance, and Analysis kingdoms.
+* Clade Browser panel for navigating the taxonomy with empty branch visibility.
+* K9 `clade-integrity.k9.ncl` validator ensuring clade manifests are structurally valid.

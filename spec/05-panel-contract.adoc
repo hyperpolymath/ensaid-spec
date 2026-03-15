@@ -1,0 +1,194 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+= eNSAID Section 05: Panel Contract Format
+Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+:version: 0.1.0
+:status: Draft
+:toc: left
+:toclevels: 3
+
+== Abstract
+
+This section defines the panel contract format: the structural and semantic declaration that every panel MUST provide. The contract declares the panel's identity, dependencies, obligations, isolation requirements, and structural files. It serves as the input to Phase 2 (Intent Capture) and Phase 3 (Constraint Propagation) of the panel lifecycle.
+
+== Motivation
+
+Without a formal contract, panels are opaque bundles of code. The eNSAID lifecycle (Section 04) requires machine-readable declarations of what a panel needs, what it provides, and what constraints it must satisfy. The contract format standardises these declarations so that any eNSAID-compliant environment can validate, wire, and gate panels consistently.
+
+== Specification
+
+=== S05-1: Contract Structure
+
+Every eNSAID panel MUST provide a contract declaration. The contract MAY be expressed as TOML, Nickel, or any structured format that the implementation can parse. The contract MUST include the following sections.
+
+==== Identity
+
+[cols="1,1,3"]
+|===
+| Field | Required | Description
+
+| `name`
+| MUST
+| The panel's identifier in PascalCase (e.g., `FileExplorer`).
+
+| `version`
+| MUST
+| Semantic version of the panel.
+
+| `author`
+| MUST
+| Author name and contact.
+
+| `license`
+| MUST
+| SPDX license identifier.
+
+| `description`
+| SHOULD
+| Human-readable description of the panel's purpose.
+
+| `clade`
+| SHOULD
+| Classification within the panel taxonomy (Section 06).
+|===
+
+==== Structural Files
+
+A panel contract MUST declare its structural files. The minimum viable panel requires:
+
+[cols="1,3,1"]
+|===
+| File | Purpose | Required
+
+| Model file
+| Contains the panel's state type and initialisation function.
+| MUST
+
+| Engine file
+| Contains pure update logic (no side effects).
+| MUST
+
+| Component file
+| Contains the view/render function.
+| MUST
+
+| Test file
+| Contains automated tests for the engine logic.
+| MUST
+|===
+
+If the panel has a backend (native process, container, or remote service), the contract MUST additionally declare:
+
+[cols="1,3,1"]
+|===
+| File | Purpose | Required (if backend)
+
+| Command file
+| Contains IPC/API wrappers for frontend-backend communication.
+| MUST
+
+| Backend module
+| Contains the backend entry point.
+| MUST
+
+| Backend types
+| Contains type definitions shared between frontend and backend.
+| MUST
+
+| Backend commands
+| Contains the command implementations.
+| MUST
+|===
+
+=== S05-2: Isolation Tier
+
+Every panel contract MUST declare its isolation tier:
+
+[cols="1,3,2"]
+|===
+| Tier | Description | Typical Use
+
+| Native
+| Runs in-process (same webview or runtime as the eNSAID environment). Full trust, hash-verified.
+| Core panels, first-party panels.
+
+| Standard Pod
+| Runs in a container with process isolation and limited network access.
+| Community panels, trusted third-party.
+
+| Hardened Pod
+| Runs in a hardened container with minimal attack surface and full security stack.
+| Untrusted or experimental panels.
+|===
+
+The contract MUST declare the minimum isolation tier the panel requires. The environment MAY elevate the isolation tier (e.g., running a "Standard Pod" panel as "Hardened Pod") but MUST NOT lower it below the declared minimum.
+
+=== S05-3: Panel-L/N/W Mapping
+
+Every panel contract MUST declare its relationship to the three primary panels:
+
+[cols="1,3"]
+|===
+| Mapping | Meaning
+
+| `panel_l`
+| This panel contributes to or consumes symbolic constraints.
+
+| `panel_n`
+| This panel contributes to or consumes neural inference.
+
+| `panel_w`
+| This panel contributes to or consumes world/workspace state.
+
+| `cross_cutting`
+| This panel operates across all three primary panels.
+|===
+
+A panel MAY map to one, two, three, or all (cross-cutting) primary panels.
+
+=== S05-4: Dependency Declarations
+
+A panel contract SHOULD declare its dependencies on:
+
+* Other panels (by name and minimum version).
+* Backend services (by protocol and endpoint).
+* System capabilities (filesystem, network, display).
+
+=== S05-5: Obligation Declarations
+
+A panel contract SHOULD declare the obligations it commits to satisfy:
+
+* Accessibility baseline (WCAG level).
+* Engine purity (no side effects in the engine file).
+* SPDX compliance (license headers in all source files).
+* Provenance tracking (co-author attribution).
+
+Obligations not declared are assumed to be "not committed" and are treated as warnings, not errors, during Phase 3 evaluation.
+
+=== S05-6: Signing
+
+A panel contract SHOULD be cryptographically signed by its author. The signature enables:
+
+* Attribution of blame when a panel misbehaves (the author's signature proves authorship).
+* Supply chain verification (the contract has not been tampered with since signing).
+
+The environment MUST NOT approve or endorse third-party panels. The environment hosts panels; blame is cryptographically attributable to the panel author.
+
+== Conformance
+
+An eNSAID implementation conforms to this section if it:
+
+1. Requires a machine-readable contract from every panel.
+2. Validates structural file declarations against the actual filesystem.
+3. Enforces isolation tier minimums.
+4. Passes contract data to the Phase 2 and Phase 3 lifecycle stages.
+
+== Reference Implementation
+
+PanLL implements panel contracts with:
+
+* K9 Nickel validators in `contractiles/k9/validators/` (8 validators covering structure, wiring, purity, accessibility, SPDX, dangerous patterns, provenance, and clade integrity).
+* The DD-004 8-file pattern as the structural file requirement.
+* Three isolation tiers: Native, Standard Pod (Alpine + Podman), Hardened Pod (Stapeln + Chainguard).
+* Clade manifests in `panel-clades/clades/*/config.k9.ncl`.

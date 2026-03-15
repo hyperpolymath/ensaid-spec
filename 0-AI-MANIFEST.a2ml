@@ -1,0 +1,46 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# 0-AI-MANIFEST.a2ml -- AI Agent Entry Point for ensaid-spec
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+@abstract:
+eNSAID (Environment for NeSy-Agentic Integrated Development) open specification.
+Defines the standard for neurosymbolic development environments with Binary Star
+human-machine co-orbit architecture.
+@end
+
+@canonical-locations:
+- SCM files: .machine_readable/ ONLY (STATE.scm, META.scm, ECOSYSTEM.scm)
+- Specification sections: spec/ (01 through 09, AsciiDoc)
+- License: LICENSE (PMPL-1.0-or-later)
+- Security: SECURITY.md
+- Contributing: CONTRIBUTING.md
+@end
+
+@invariants:
+- This is a SPECIFICATION repository, not an implementation
+- PanLL is the reference implementation (separate repo)
+- "panels" NEVER "panes" in all documents
+- RFC 2119 keywords (MUST/SHOULD/MAY) carry normative meaning in spec/ files
+- SCM files MUST be in .machine_readable/ ONLY, never in root
+- All files MUST have SPDX-License-Identifier headers
+@end
+
+@structure:
+- README.adoc: Overview and section index
+- spec/01-binary-star.adoc: Binary Star architecture
+- spec/02-three-panel-model.adoc: Three-panel model (L/N/W)
+- spec/03-cognitive-governance.adoc: Cognitive Governance Stack
+- spec/04-panel-lifecycle.adoc: Panel lifecycle (5 phases)
+- spec/05-panel-contract.adoc: Panel contract format
+- spec/06-panel-taxonomy.adoc: Panel taxonomy (cladistic)
+- spec/07-contractiles.adoc: Contractile governance
+- spec/08-constraint-propagation.adoc: Constraint propagation engine
+- spec/09-translation-honesty.adoc: Translation honesty vocabulary
+@end
+
+@on-enter:
+1. Read this manifest first
+2. Read .machine_readable/STATE.scm for current project state
+3. Read .machine_readable/META.scm for architecture decisions
+4. Read .machine_readable/ECOSYSTEM.scm for ecosystem position
+@end

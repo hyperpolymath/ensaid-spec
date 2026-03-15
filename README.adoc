@@ -1,0 +1,96 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+= eNSAID: Environment for NeSy-Agentic Integrated Development
+Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+:version: 0.1.0
+:spdx: PMPL-1.0-or-later
+:toc: left
+:toclevels: 3
+:icons: font
+
+== What is eNSAID?
+
+eNSAID is an open specification for neurosymbolic development environments -- IDEs where human developers and AI agents co-orbit a shared workspace as equals in a Binary Star architecture.
+
+eNSAID defines:
+
+* The Binary Star co-orbit model (human and machine as gravitational peers)
+* The three-panel architecture (Panel-L symbolic, Panel-N neural, Panel-W world)
+* The Cognitive Governance Stack (Anti-Crash Gate, Vexometer, Information Humidity, Orbital Drift)
+* The panel lifecycle (5-phase constraint-centric model)
+* The panel contract format (structural and semantic validation)
+* The panel taxonomy (cladistic classification with empty branches)
+* The contractile governance system (must/trust/dust/lust/k9)
+* The constraint propagation engine (hub-and-spoke semantic core)
+* The translation honesty vocabulary (exact/conservative/heuristic/refused)
+
+== Specification Sections
+
+[cols="1,3,1"]
+|===
+| Section | Title | Status
+
+| link:spec/01-binary-star.adoc[01]
+| Binary Star Architecture
+| Draft
+
+| link:spec/02-three-panel-model.adoc[02]
+| Three-Panel Model (L/N/W)
+| Draft
+
+| link:spec/03-cognitive-governance.adoc[03]
+| Cognitive Governance Stack
+| Draft
+
+| link:spec/04-panel-lifecycle.adoc[04]
+| Panel Lifecycle (5 Phases)
+| Draft
+
+| link:spec/05-panel-contract.adoc[05]
+| Panel Contract Format
+| Draft
+
+| link:spec/06-panel-taxonomy.adoc[06]
+| Panel Taxonomy (Cladistic Classification)
+| Draft
+
+| link:spec/07-contractiles.adoc[07]
+| Contractile Governance
+| Draft
+
+| link:spec/08-constraint-propagation.adoc[08]
+| Constraint Propagation Engine
+| Draft
+
+| link:spec/09-translation-honesty.adoc[09]
+| Translation Honesty Vocabulary
+| Draft
+|===
+
+== Reference Implementation
+
+link:https://github.com/hyperpolymath/panll[PanLL] is the reference implementation of eNSAID.
+
+== The V for Vendetta Principle
+
+____
+You can kill PanLL. You cannot kill the idea. Ideas are bulletproof.
+____
+
+If someone builds a better eNSAID environment, the ecosystem benefits. Every panel written for one eNSAID implementation SHOULD work with any compliant environment.
+
+The pattern is well-established:
+
+* HTTP -> Apache / Nginx / Caddy
+* SQL -> Postgres / MySQL / SQLite
+* LSP -> every language server
+* eNSAID -> PanLL / [your implementation here]
+
+== RFC 2119 Keywords
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in the specification documents are to be interpreted as described in https://www.rfc-editor.org/rfc/rfc2119[RFC 2119].
+
+== License
+
+SPDX-License-Identifier: PMPL-1.0-or-later

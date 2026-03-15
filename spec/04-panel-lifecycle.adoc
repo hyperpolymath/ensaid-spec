@@ -1,0 +1,146 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+= eNSAID Section 04: Panel Lifecycle
+Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+:version: 0.1.0
+:status: Draft
+:toc: left
+:toclevels: 3
+
+== Abstract
+
+This section defines the five-phase panel lifecycle for eNSAID-compliant environments. The lifecycle governs how panels are created, validated, wired, gated, and audited. Phase 3 (Constraint Propagation) serves as the semantic core of the system, with the other phases acting as substrate, intent capture, policy, and observability layers around it.
+
+== Motivation
+
+Panels in a neurosymbolic development environment are not simple UI widgets. They carry obligations: type contracts, wiring dependencies, accessibility baselines, and security constraints. A formal lifecycle ensures that panels cannot reach a deployed state without satisfying their obligations, and that failures are diagnosed as root causes rather than symptoms.
+
+== Specification
+
+=== S04-1: Phase 1 -- Constraint Substrate
+
+Phase 1 builds the internal language, graph model, and diagnostic vocabulary that make constraint-aware panel realisation possible.
+
+==== Requirements
+
+A conforming environment MUST define:
+
+* A **contract vocabulary**: the set of terms used to describe panel obligations (types, wiring points, accessibility requirements, security properties).
+* **Invariant categories**: classes of constraints that panels may declare or inherit (structural, behavioural, security, accessibility).
+* **Dependency relationships**: how obligations relate to each other (e.g., "wiring to Msg.res depends on model type being defined first").
+* **Diagnostic codes**: machine-readable identifiers for constraint violations, enabling tooling to parse and act on failures.
+* **Repairability classes**: for each violation, whether it can be automatically repaired, manually repaired, or requires architectural change.
+
+A conforming environment SHOULD define:
+
+* **Constraint kinds**: a type system for constraints themselves (e.g., "hard" constraints that must be satisfied vs. "soft" constraints that produce warnings).
+* **Propagation machinery**: the algorithm by which constraint satisfaction propagates through the dependency graph.
+
+=== S04-2: Phase 2 -- Intent Capture and Satisfiability
+
+Phase 2 catches incoherent, incomplete, or contradictory panel contracts before generation and wiring begin.
+
+==== Requirements
+
+A conforming environment MUST reject panel definitions that contain:
+
+* Contradictory options (e.g., declaring both "read-only" and "persistence: filesystem").
+* Missing required declarations (e.g., a backend panel that declares no commands).
+* Impossible combinations (e.g., a native-isolation panel that requires network access to untrusted endpoints).
+
+A conforming environment MUST emit Phase-3-compatible obligation records when accepting a panel definition, not bespoke warnings that the constraint engine cannot process.
+
+A conforming environment SHOULD validate panel definitions at creation time (the cheapest point to find errors), rather than discovering problems during wiring or deployment.
+
+=== S04-3: Phase 3 -- Constraint Propagation and Wiring Realisation
+
+Phase 3 is the semantic core of the panel lifecycle. It evaluates panel obligations against repository reality, identifies bottlenecks and missing joins, and generates safe repairs where possible.
+
+==== Requirements
+
+A conforming environment MUST:
+
+* **Ingest contract declarations** from Phase 2.
+* **Infer repository facts** from the actual state of source files, configuration, and wiring.
+* **Propagate obligations** through the dependency graph to determine which constraints are satisfied, unsatisfied, or blocked.
+* **Distinguish root failures from downstream noise**: when a single missing declaration causes five downstream wiring failures, the environment MUST identify the root cause and report derived failures as consequences, not independent problems.
+* **Classify failures** as:
+** Automatically repairable (the environment can generate and apply a fix).
+** Manually repairable (the environment can describe the fix but cannot safely apply it).
+** Non-repairable (requires architectural change or human judgement).
+
+A conforming environment SHOULD:
+
+* **Identify bottlenecks**: constraints that, if satisfied, would unblock the most downstream obligations.
+* **Generate safe repairs**: for automatically-repairable failures, produce patches that can be reviewed and applied.
+* **Report minimum repair sets**: the smallest set of changes that would satisfy all outstanding obligations.
+
+=== S04-4: Phase 4 -- Completion Policy and Gating
+
+Phase 4 translates constraint satisfaction status into policy decisions. It determines whether a panel may be registered, deployed, or released.
+
+==== Requirements
+
+A conforming environment MUST define the following panel states:
+
+[cols="1,3"]
+|===
+| State | Meaning
+
+| Draft
+| Panel exists but has unsatisfied required obligations. Not available for use.
+
+| Experimental
+| Panel has satisfied structural obligations but not all quality or security obligations. Available under explicit opt-in.
+
+| Viable
+| Panel has satisfied all required obligations. Available for general use.
+
+| Releasable
+| Panel has satisfied all required and recommended obligations. Eligible for stable release.
+|===
+
+A conforming environment MUST NOT register a panel as "viable" or "releasable" unless the corresponding Phase 3 obligations are satisfied.
+
+A conforming environment MUST support explicit exemption rules that allow a panel to operate in a reduced state (e.g., "experimental" despite unmet security obligations) with visible, auditable overrides.
+
+=== S04-5: Phase 5 -- Audit and Operator Trust
+
+Phase 5 makes the constraint system's state legible to the Human Operator, building trust through transparency.
+
+==== Requirements
+
+A conforming environment MUST expose the following information to the operator:
+
+* Current constraint satisfaction state for each panel.
+* Active bottlenecks (constraints whose satisfaction would unblock the most progress).
+* Unsatisfied obligations with their repairability classification.
+* What changed since the last evaluation (delta reporting).
+
+A conforming environment SHOULD expose:
+
+* Dependency chains (which constraints depend on which).
+* Repair suggestions for manually-repairable failures.
+* Confidence and health scores for the overall system.
+* Historical constraint state (how the system has evolved over time).
+
+== Conformance
+
+An eNSAID implementation conforms to this section if it:
+
+1. Defines a contract vocabulary and diagnostic code system (Phase 1).
+2. Rejects contradictory or incomplete panel definitions at creation time (Phase 2).
+3. Performs constraint propagation that distinguishes root failures from derived failures (Phase 3).
+4. Gates panel deployment based on constraint satisfaction status (Phase 4).
+5. Exposes constraint state and bottlenecks to the operator (Phase 5).
+
+== Reference Implementation
+
+PanLL implements the five-phase lifecycle with:
+
+* Phase 1: Contract vocabulary in `tools/pcc/src/contract.rs` and `obligation.rs`. Diagnostic codes in `reporter.rs`.
+* Phase 2: Panel Minter (`Minter.res`) validates panel contracts at creation time.
+* Phase 3: PCC (Panel Constraint Checker) in `tools/pcc/` with propagation in `propagator.rs` and scanning in `scanner.rs`.
+* Phase 4: Release Gate recipe (`contractiles/k9/recipes/release-gate.k9.ncl`) with 10 gates.
+* Phase 5: Audit panel exposing constraint state, bottlenecks, and repair suggestions.

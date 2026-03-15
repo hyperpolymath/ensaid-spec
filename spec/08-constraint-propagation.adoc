@@ -1,0 +1,144 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+= eNSAID Section 08: Constraint Propagation Engine
+Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+:version: 0.1.0
+:status: Draft
+:toc: left
+:toclevels: 3
+
+== Abstract
+
+This section formalises the constraint propagation engine: the hub-and-spoke semantic core of the eNSAID panel lifecycle (Phase 3). The constraint engine ingests panel contract declarations, infers repository facts, propagates obligations through a dependency graph, and produces diagnostic reports that distinguish root failures from downstream noise.
+
+== Motivation
+
+Traditional IDE validation tools (linters, type checkers, build systems) operate independently and report flat lists of errors. When a single missing declaration causes five downstream wiring failures, the developer sees five independent error messages and must deduce the root cause manually.
+
+The constraint propagation engine treats validation as a dependency-aware graph problem. It identifies the primary bottleneck (the root cause) and reports downstream failures as consequences, not independent problems. This is the "Theory of Constraints" applied to panel validation.
+
+== Specification
+
+=== S08-1: Obligation Model
+
+The constraint engine operates on obligations: formal statements of what a panel or project must satisfy.
+
+==== Obligation Structure
+
+Every obligation MUST have:
+
+[cols="1,1,3"]
+|===
+| Field | Required | Description
+
+| `id`
+| MUST
+| Unique identifier for the obligation.
+
+| `kind`
+| MUST
+| Category: structural, behavioural, security, accessibility, or custom.
+
+| `source`
+| MUST
+| Where the obligation comes from (panel contract, contractile tier, inherited).
+
+| `status`
+| MUST
+| Current state: satisfied, unsatisfied, blocked, or unknown.
+
+| `dependencies`
+| SHOULD
+| List of obligation IDs that must be satisfied before this obligation can be evaluated.
+
+| `repairability`
+| SHOULD
+| Classification: auto-repairable, manually-repairable, or non-repairable.
+|===
+
+=== S08-2: Fact Inference
+
+The constraint engine MUST infer facts from the actual state of the repository or workspace. Facts represent ground truth: what files exist, what wiring points are connected, what types are declared.
+
+A conforming engine MUST support inferring facts from:
+
+* Filesystem state (file existence, file contents).
+* Configuration files (build configuration, panel contracts).
+* Source code structure (module declarations, type definitions, import statements).
+
+A conforming engine MAY support inferring facts from:
+
+* Version control state (git blame, commit history).
+* Runtime state (test results, build output).
+* External services (CI/CD status, dependency registries).
+
+=== S08-3: Propagation Algorithm
+
+The constraint engine MUST propagate obligation status through the dependency graph according to the following rules:
+
+1. **Leaf obligations** (no dependencies) are evaluated directly against inferred facts.
+2. **Dependent obligations** are evaluated only after all their dependencies have been evaluated.
+3. **Blocked obligations** are obligations whose dependencies include at least one unsatisfied obligation. A blocked obligation MUST NOT be reported as independently unsatisfied; it MUST be reported as "blocked by [dependency ID]."
+4. **Root failures** are unsatisfied leaf obligations or unsatisfied obligations whose dependencies are all satisfied. These are the primary bottlenecks.
+
+=== S08-4: Diagnostic Reporting
+
+The constraint engine MUST produce diagnostic reports that include:
+
+* **Root failures**: the primary unsatisfied obligations that are not blocked by other failures.
+* **Blocked obligations**: obligations that would be evaluable if their dependencies were satisfied, with a reference to the blocking root failure.
+* **Satisfied obligations**: obligations that are met (for completeness and operator confidence).
+
+The constraint engine SHOULD produce:
+
+* **Dependency chains**: for each root failure, the chain of obligations that it blocks.
+* **Minimum repair set**: the smallest set of changes that would satisfy all currently-unsatisfied root obligations.
+* **Bottleneck ranking**: root failures ranked by the number of downstream obligations they block (highest-impact first).
+
+=== S08-5: Repair Synthesis
+
+A conforming constraint engine MAY synthesise repairs for auto-repairable obligations.
+
+When synthesising repairs:
+
+* The engine MUST classify each repair as "safe" (can be applied without human review) or "review-required" (must be inspected before application).
+* The engine MUST NOT apply repairs automatically without operator consent unless the operator has explicitly enabled auto-repair for the relevant obligation class.
+* The engine MUST log all synthesised and applied repairs in the audit trail (Phase 5).
+
+=== S08-6: Hub-and-Spoke Architecture
+
+The constraint propagation engine is the hub of the panel lifecycle. All other phases are spokes:
+
+----
+Phase 1 (Substrate) --> defines vocabulary and obligation types
+Phase 2 (Intent)    --> feeds validated contracts into the engine
+                             |
+                      Phase 3 (Engine) <-- hub
+                             |
+Phase 4 (Policy)    <-- consumes constraint status for gating decisions
+Phase 5 (Audit)     <-- consumes constraint status for operator visibility
+----
+
+A conforming environment MUST route all panel validation through the constraint engine. Phases 4 and 5 MUST NOT independently rediscover constraint logic that Phase 3 already computes.
+
+== Conformance
+
+An eNSAID implementation conforms to this section if it:
+
+1. Defines obligations with ID, kind, source, and status.
+2. Infers facts from at least filesystem state and configuration files.
+3. Propagates obligations through a dependency graph.
+4. Distinguishes root failures from blocked/derived failures in diagnostic output.
+5. Routes all panel validation through a single constraint engine (no redundant logic in gating or audit).
+
+== Reference Implementation
+
+PanLL implements the constraint propagation engine with:
+
+* `tools/pcc/src/obligation.rs` -- Obligation data model with kind, status, and dependency tracking.
+* `tools/pcc/src/scanner.rs` -- Fact inference from filesystem and source code.
+* `tools/pcc/src/propagator.rs` -- Dependency-aware propagation algorithm.
+* `tools/pcc/src/reporter.rs` -- Diagnostic reporting with root/blocked/satisfied classification.
+* `tools/pcc/src/contract.rs` -- Contract vocabulary and parsing.
+* `tools/pcc/src/repairer.rs` -- Repair synthesis for auto-repairable obligations.

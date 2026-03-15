@@ -1,0 +1,141 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+= eNSAID Section 07: Contractile Governance
+Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+:version: 0.1.0
+:status: Draft
+:toc: left
+:toclevels: 3
+
+== Abstract
+
+This section defines the contractile governance system: a five-tier system of elastic state contracts that govern what a project must have, what it intends to have, what it has accumulated, what it aspires to, and how compliance is validated. Contractiles are the mechanism by which eNSAID environments enforce project-level invariants beyond individual panel contracts.
+
+== Motivation
+
+Panel contracts (Section 05) govern individual panels. But an eNSAID project as a whole has obligations that transcend any single panel: license compliance, structural requirements, banned patterns, integration targets. The contractile system provides project-wide governance with five tiers ranging from hard physical requirements ("the LICENSE file must exist") to aspirational intent ("we intend to integrate TypeLL").
+
+== Specification
+
+=== S07-1: Contractile Tiers
+
+A conforming eNSAID environment MUST support at least three of the following five contractile tiers:
+
+==== Must (Physical State)
+
+The Must tier declares hard requirements that MUST be satisfied at all times. Must contracts are boolean: either the condition is met or the project is non-compliant.
+
+Examples:
+
+* "LICENSE file must exist."
+* "All source files must have SPDX headers."
+* "No Dockerfiles (use Containerfiles)."
+* "No deprecated API calls."
+
+A conforming environment MUST provide a mechanism to evaluate Must contracts automatically and report violations.
+
+==== Trust (Confidence State)
+
+The Trust tier declares conditions under which the project is trustworthy. Trust contracts are confidence-graded: they express "we trust this because [evidence]."
+
+Examples:
+
+* "Hash-verified core files (tamper detection)."
+* "Cryptographic signatures on panel manifests."
+* "SBOM (Software Bill of Materials) present and current."
+
+==== Dust (Accumulated State)
+
+The Dust tier declares accumulated artifacts and technical debt. Dust contracts track what has built up over time and may need cleaning.
+
+Examples:
+
+* "12 unresolved TODOs in src/."
+* "3 deprecated API usages awaiting migration."
+* "Legacy configuration file still present."
+
+A conforming environment SHOULD track Dust accumulation over time and surface trends (increasing or decreasing).
+
+==== Lust (Aspirational State / Intent)
+
+The Lust tier declares future intentions and integration targets. Lust contracts are not enforced; they are tracked as aspirational goals.
+
+Examples:
+
+* "Intend to integrate TypeLL type checking."
+* "Intend to migrate from npm to Deno."
+* "Planned: game development panel suite."
+
+A conforming environment SHOULD distinguish between "in-progress" and "declared" intent.
+
+==== K9 (Validation Machinery)
+
+The K9 tier provides the validation infrastructure itself: machine-readable contracts written in a configuration language (e.g., Nickel) that evaluate project state and report compliance.
+
+K9 operates at two levels:
+
+[cols="1,3"]
+|===
+| Level | Description
+
+| Yard (read-only)
+| Validators that declare structural contracts. They describe what a valid artifact looks like without executing commands or modifying files.
+
+| Hunt (executable)
+| Recipes that execute commands with real side effects (build, scaffold, audit). Hunt recipes MUST declare their side effects explicitly and SHOULD require cryptographic signature verification before execution.
+|===
+
+=== S07-2: Contractile Evaluation
+
+A conforming environment MUST support automated evaluation of Must and K9 tier contracts. Evaluation MUST produce:
+
+* A per-contract pass/fail status.
+* A human-readable description of each failure.
+* A machine-readable diagnostic code (compatible with Phase 1 diagnostic vocabulary).
+
+A conforming environment SHOULD support automated evaluation of Trust and Dust tier contracts.
+
+Lust tier contracts are informational and MUST NOT cause build or deployment failures.
+
+=== S07-3: Contractile File Format
+
+Contractile declarations MAY be expressed in any structured format. The specification recommends:
+
+* A2ML (Attestation and Audit Markup Language) for Must, Trust, Dust, and Lust tiers.
+* Nickel (`.k9.ncl`) for K9 tier validators and recipes.
+
+Each contractile file MUST include:
+
+* SPDX license header.
+* An abstract describing the contract's purpose.
+* A list of required sections or checks.
+
+=== S07-4: Hunt Recipe Safety
+
+K9 Hunt recipes (executable contracts) MUST:
+
+* Declare all side effects explicitly (filesystem reads/writes, network access, command execution).
+* Specify `signature_required = true` for any recipe that modifies files or executes external commands.
+* Include a pedigree block (name, version, author, leash level).
+
+A conforming environment SHOULD verify cryptographic signatures on Hunt recipes before execution.
+
+== Conformance
+
+An eNSAID implementation conforms to this section if it:
+
+1. Supports at least three of the five contractile tiers.
+2. Automatically evaluates Must contracts and reports violations.
+3. Distinguishes between read-only validators and executable recipes.
+4. Requires side-effect declaration for executable contracts.
+
+== Reference Implementation
+
+PanLL implements contractile governance with:
+
+* `contractiles/must/Mustfile.a2ml` -- Physical state requirements (LICENSE, README, SPDX headers, banned files).
+* `contractiles/lust/Intentfile.a2ml` -- Aspirational intent (TEA framework, workspace layer, TypeLL, Stapeln).
+* `contractiles/k9/validators/` -- 8 K9 Yard validators (panel structure, wiring completeness, clade integrity, TEA purity, accessibility baseline, SPDX compliance, dangerous patterns, provenance chain).
+* `contractiles/k9/recipes/` -- 4 K9 Hunt recipes (build validation, panel mint, seam audit, release gate).
+* Trust and Dust tiers in `.machine_readable/contractiles/`.
