@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# Clade declaration — part of the gv-clade-index registry
+# See: https://github.com/hyperpolymath/gv-clade-index
+
+[identity]
+uuid = "052b60ae-8596-538f-833c-3bdd478b1bfb"
+primary-forge = "github"
+primary-owner = "hyperpolymath"
+canonical-name = "ensaid-spec"
+prefixed-name = "gv-ensaid-spec"
+
+[clade]
+primary = "gv"
+secondary = ["pt"]
+assigned = "2026-03-16"
+rationale = ""
+
+[forges]
+github = "hyperpolymath/ensaid-spec"
+gitlab = "hyperpolymath/ensaid-spec"
+bitbucket = "hyperpolymath/ensaid-spec"
+
+[lineage]
+type = "standalone"
+parent = "ENSAID specification"
+born = "2026-03-16"
