@@ -9,7 +9,7 @@ human-machine co-orbit architecture.
 @end
 
 @canonical-locations:
-- SCM files: .machine_readable/ ONLY (STATE.scm, META.scm, ECOSYSTEM.scm)
+- SCM files: .machine_readable/ ONLY (.machine_readable/6a2/STATE.a2ml, .machine_readable/6a2/META.a2ml, .machine_readable/6a2/ECOSYSTEM.a2ml)
 - Specification sections: spec/ (01 through 09, AsciiDoc)
 - License: LICENSE (PMPL-1.0-or-later)
 - Security: SECURITY.md
@@ -40,7 +40,7 @@ human-machine co-orbit architecture.
 
 @on-enter:
 1. Read this manifest first
-2. Read .machine_readable/STATE.scm for current project state
-3. Read .machine_readable/META.scm for architecture decisions
-4. Read .machine_readable/ECOSYSTEM.scm for ecosystem position
+2. Read `.machine_readable/6a2/STATE.a2ml` for current project state
+3. Read `.machine_readable/6a2/META.a2ml` for architecture decisions
+4. Read `.machine_readable/6a2/ECOSYSTEM.a2ml` for ecosystem position
 @end
