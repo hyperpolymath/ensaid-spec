@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PMPL-1.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 # 0-AI-MANIFEST.a2ml -- AI Agent Entry Point for ensaid-spec
 # Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 
@@ -11,7 +11,7 @@ human-machine co-orbit architecture.
 @canonical-locations:
 - SCM files: .machine_readable/ ONLY (.machine_readable/6a2/STATE.a2ml, .machine_readable/6a2/META.a2ml, .machine_readable/6a2/ECOSYSTEM.a2ml)
 - Specification sections: spec/ (01 through 09, AsciiDoc)
-- License: LICENSE (PMPL-1.0-or-later)
+- License: LICENSE (MPL-2.0)
 - Security: SECURITY.md
 - Contributing: CONTRIBUTING.md
 @end

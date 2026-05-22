@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: PMPL-1.0-or-later -->
+<!-- SPDX-License-Identifier: MPL-2.0 -->
 
 # Contributing to the eNSAID Specification
 
@@ -47,7 +47,7 @@ If you believe eNSAID needs a new section:
 
 ## License
 
-All contributions are under PMPL-1.0-or-later (Palimpsest License). By contributing, you agree to license your contribution under these terms.
+All contributions are under MPL-2.0 (Palimpsest License). By contributing, you agree to license your contribution under these terms.
 
 ## Code of Conduct
 

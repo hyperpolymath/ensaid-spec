@@ -1,10 +1,10 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 // Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 
 = eNSAID: Environment for NeSy-Agentic Integrated Development
 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 :version: 0.1.0
-:spdx: PMPL-1.0-or-later
+:spdx: MPL-2.0
 :toc: left
 :toclevels: 3
 :icons: font
@@ -93,4 +93,4 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 == License
 
-SPDX-License-Identifier: PMPL-1.0-or-later
+SPDX-License-Identifier: MPL-2.0
