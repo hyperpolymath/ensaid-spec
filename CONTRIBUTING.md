@@ -1,5 +1,7 @@
-<!-- SPDX-License-Identifier: MPL-2.0 -->
-
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # Contributing to the eNSAID Specification
 
 ## What is eNSAID?
@@ -47,7 +49,7 @@ If you believe eNSAID needs a new section:
 
 ## License
 
-All contributions are under MPL-2.0 (Palimpsest License). By contributing, you agree to license your contribution under these terms.
+All contributions are under MPL-2.0 (MPL-2.0). By contributing, you agree to license your contribution under these terms.
 
 ## Code of Conduct
 
