@@ -1,0 +1,310 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hyperpolymath/ensaid-spec/blob/main/spec/schemas/interaction-record-0.1.schema.json",
+  "title": "eNSAID interaction record — opt-in experimental interchange profile",
+  "description": "Proposed structural checks only; references to external obligations, identities and receipts are not verified by this schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "interaction_id",
+    "participants",
+    "intent",
+    "interpretations",
+    "obligations",
+    "authority",
+    "action",
+    "execution",
+    "evidence",
+    "continuation"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ensaid-interaction/0.1-proposal"
+    },
+    "interaction_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "participants": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "human",
+              "thing",
+              "system",
+              "organisation"
+            ]
+          }
+        }
+      }
+    },
+    "intent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "originator",
+        "request",
+        "target"
+      ],
+      "properties": {
+        "originator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "request": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "interpretations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "participant",
+          "status",
+          "claim"
+        ],
+        "properties": {
+          "participant": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "proposed",
+              "asserted",
+              "accepted",
+              "disputed",
+              "superseded"
+            ]
+          },
+          "claim": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "obligations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ref",
+          "status"
+        ],
+        "properties": {
+          "ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "satisfied",
+              "unsatisfied",
+              "blocked",
+              "unknown"
+            ]
+          }
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decision"
+      ],
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "authorised",
+            "denied",
+            "revoked"
+          ]
+        },
+        "scope": {
+          "type": "string"
+        }
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capability",
+        "side_effects",
+        "status"
+      ],
+      "properties": {
+        "capability": {
+          "type": "string"
+        },
+        "side_effects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "not-started",
+            "proposed",
+            "dispatched",
+            "completed",
+            "failed",
+            "cancelled"
+          ]
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "status",
+        "receipt"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "not-started",
+            "queued",
+            "accepted",
+            "completed",
+            "failed",
+            "cancelled",
+            "unknown"
+          ]
+        },
+        "receipt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "producer",
+          "kind",
+          "locator",
+          "verification"
+        ],
+        "properties": {
+          "producer": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "type": "string",
+            "minLength": 1
+          },
+          "locator": {
+            "type": "string",
+            "minLength": 1
+          },
+          "verification": {
+            "type": "string",
+            "enum": [
+              "unverified",
+              "reported",
+              "verified",
+              "rejected"
+            ]
+          }
+        }
+      }
+    },
+    "translation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fidelity"
+      ],
+      "properties": {
+        "fidelity": {
+          "type": "string",
+          "enum": [
+            "exact",
+            "conservative",
+            "heuristic",
+            "refused"
+          ]
+        },
+        "validation_target": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "continuation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "predecessor",
+        "open_questions"
+      ],
+      "properties": {
+        "predecessor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "open_questions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
