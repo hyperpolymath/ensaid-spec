@@ -1,0 +1,103 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= AffineScript Example: Interpretation, Authority, Execution and Evidence
+:status: Illustrative; not an executed transaction
+:toc:
+
+== Situation
+
+A human requests: "Refactor an AffineScript parser path to make resource consumption clearer, without changing the ownership discipline or quietly substituting another language."
+
+The assistant proposes a refactor, but the human may mean either making resource movement visible in source or changing only explanatory material. The interpretations need not be treated as equivalent.
+
+This example contains *no actual execution*, compiler output, proof, BoJ receipt, or Hypatia result. It shows the record states that would be required to report such work accurately.
+
+== Candidate interchange record
+
+[source,json]
+----
+{
+  "schema": "ensaid-interaction/0.1-proposal",
+  "interaction_id": "example-affinescript-001",
+  "participants": [
+    {"id": "operator", "kind": "human"},
+    {"id": "agent-1", "kind": "thing"}
+  ],
+  "intent": {
+    "originator": "operator",
+    "request": "Make resource consumption clearer without weakening ownership.",
+    "target": "AffineScript parser"
+  },
+  "interpretations": [
+    {
+      "participant": "operator",
+      "status": "asserted",
+      "claim": "Keep the AffineScript resource guarantees and original compiler path."
+    },
+    {
+      "participant": "agent-1",
+      "status": "proposed",
+      "claim": "Refactor internal representation; do not replace semantics with an unchecked host-language implementation."
+    }
+  ],
+  "obligations": [
+    {
+      "ref": "affinescript/docs/SOUNDNESS.adoc",
+      "status": "unknown"
+    },
+    {
+      "ref": "affinescript/docs/CAPABILITY-MATRIX.adoc",
+      "status": "unknown"
+    }
+  ],
+  "authority": {
+    "source": "operator",
+    "decision": "pending",
+    "scope": "proposed refactor only"
+  },
+  "action": {
+    "capability": "unselected",
+    "side_effects": ["potential source modification"],
+    "status": "not-started"
+  },
+  "execution": {
+    "provider": "unselected",
+    "status": "not-started",
+    "receipt": null
+  },
+  "evidence": [],
+  "translation": {
+    "fidelity": "heuristic",
+    "validation_target": "AffineScript compiler and applicable soundness tests",
+    "evidence": null
+  },
+  "continuation": {
+    "predecessor": null,
+    "open_questions": [
+      "Which resource-flow change is intended?",
+      "Which existing tests and compiler capability paths apply?"
+    ]
+  }
+}
+----
+
+== How the record changes with legitimate progress
+
+. *Interpretation accepted:* record the human's clarification as a new, attributable decision. Do not delete the agent's initial interpretation.
+. *Authorisation granted:* reference the actual authority, allowed file scope, expiry, and side effects. An interaction record cannot grant itself authority.
+. *Action dispatched:* use an existing authorised tool or BoJ capability. Record invocation identity separately from acceptance and completion.
+. *Execution completed:* attach an authentic executor receipt. An empty or model-authored receipt is not evidence.
+. *Semantics checked:* record actual compiler/proof/test artefacts and their observed results, using the authoritative AffineScript capability and soundness status sources.
+. *Continue:* cite the predecessor ID, what changed, remaining disagreement and outstanding obligations.
+
+== Important translation distinction
+
+AffineScript is designed to elaborate language-shaped faces into its own checked core and compile to supported targets. Therefore, a blanket prohibition on translation into host languages is wrong. The relevant restriction is against *unverified semantic substitution*. Section 09's four fidelity levels should accompany every claimed translation.
+
+Do not claim `exact` for a heuristic rewrite merely because it compiles. A successful build establishes only the tested property of that build unless further semantic evidence exists.
+
+== Boundary assertions
+
+* PanLL/eNSAID presents and mediates interaction but does not replace the human's authority.
+* BoJ coordinates or dispatches capabilities but does not certify AffineScript semantics.
+* Hypatia may supply relevant governance findings; it is not the type checker.
+* A history of records supports provenance and accountable continuation, not by itself diachronic identity.
