@@ -1,0 +1,98 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= eNSAID Section 10: Interaction Record (Experimental Extension)
+:version: 0.1.0-draft
+:status: Proposal, not ratified
+:toc: left
+:toclevels: 3
+
+[IMPORTANT]
+====
+This is an *opt-in proposal*, not a new requirement on Sections 01–09 or existing eNSAID implementations. RFC 2119 keywords below apply only to a consumer explicitly claiming conformance to the experimental interaction-record profile. No runtime implementation or formal proof is asserted.
+====
+
+== Abstract
+
+An interaction record is a portable, attributable account of one human–Thing or Thing–Thing task interaction. It relates intent, separate interpretations, external obligations, authorisation, action, evidence and continuation without treating generated explanations as proof of execution.
+
+It is *not* a panel contract, a panel lifecycle, a private reasoning trace, a BoJ coordination envelope, an executable K9 component, a DEED document, or an authorisation mechanism. It references these where appropriate without replacing their own formats.
+
+== Scope and vocabulary
+
+An *interaction* is a bounded task, not a claim that a participant has a continuous identity. A *participant* is an identified source of claims or decisions, not necessarily a human. An *interpretation* is an attributable, potentially disputed account of intent or meaning. An *obligation reference* points to an authoritative external contract. An *execution receipt* is evidence reported by an executor; it does not by itself prove semantic correctness.
+
+The profile is transport-neutral and can be stored or exchanged using a format negotiated by its consumers. The supplied JSON Schema is a *candidate interchange shape*, not a new universal wire protocol.
+
+== Relationship to existing specifications
+
+* Section 04 governs the *panel* lifecycle; it MUST NOT be repurposed as a task-action state machine.
+* Section 05 governs structural contracts for *panels*; interaction records MAY refer to such contracts but are not substitutes for them.
+* Section 07 governs Contractiles and applicable governance; this extension MUST NOT independently decide those rules.
+* Section 08 governs obligation satisfaction and dependency propagation; interaction records MUST refer to its results rather than inventing another constraint solver.
+* Section 09 governs translation honesty. Where a translation is claimed, a record MUST use \`exact\`, \`conservative\`, \`heuristic\` or \`refused\` and include the evidence required by Section 09.
+* BoJ remains responsible for its own capability discovery, coordination and dispatch; Hypatia remains responsible for its own governance findings. A recorded claim from either system MUST be distinguished from verified execution evidence.
+* The normative DEED grammar, K9 component contract and K9 coordination grammar remain external standards. No part of this profile attempts to parse or reinterpret those formats.
+
+== Candidate record requirements
+
+=== S10-1 Identity and version
+
+A record MUST include a schema identifier, a stable interaction identifier, and the participant identities used by claims. Identity references MUST distinguish source identification from verification of that source.
+
+=== S10-2 Intent and interpretation
+
+A record MUST contain the request or an immutable reference to it. Every interpretation MUST attribute its speaker/source, status and content. Distinct interpretations MAY coexist, including interpretations in unresolved disagreement. Recording an interpretation MUST NOT imply authorisation.
+
+=== S10-3 Obligations and authority
+
+Obligations MUST reference the contract or rule that defines them, plus an independently obtainable status where known. The record MUST distinguish unknown, blocked, unsatisfied and satisfied rather than interpreting missing evidence as success. Authority MUST identify its source, scope and decision; an unauthorised or pending operation MUST NOT be represented as authorised.
+
+=== S10-4 Action and receipts
+
+Every proposed action MUST name its intended capability and side effects. An execution claim MUST carry either an executor-issued receipt reference or an explicit lack-of-receipt state. A tool call's acceptance, a queued operation, a completed action, and a semantically validated result MUST remain distinguishable. Retry or replay MUST NOT be assumed to be idempotent.
+
+=== S10-5 Evidence and explanation
+
+Evidence MUST carry its producer, type, locator and verification status. Explanations SHOULD cite evidence and disclose unresolved uncertainty. A generated account MUST NOT substitute for a tool receipt or semantic proof. The record SHOULD preserve contrary evidence rather than silently overwriting it.
+
+=== S10-6 Continuation
+
+Continuations MUST reference the predecessor record or explicitly declare none. Amendments SHOULD be additive, with attributable change reasons; a historical claim MUST NOT be silently replaced. Shared identifiers or a sequence of records MUST NOT be treated as proof of diachronic identity or phenomenological experience.
+
+=== S10-7 Translation fidelity
+
+When an interaction performs a translation, its outcome MUST conform to Section 09's fidelity vocabulary and evidence requirements. Heuristic proposals MUST NOT be called exact merely because tests pass or time has elapsed. If a faithful transformation cannot be justified, it MUST be labelled refused.
+
+== Ownership and integration seams
+
+[cols="1,2,3",options="header"]
+|===
+| Seam | Existing owner | This profile's responsibility
+| S-01 | eNSAID/PanLL interaction | Attribute request and participant interpretation; no new UI architecture
+| S-02 | Section 07/08, DEED/K9 governance | Reference obligations and authority without re-evaluating their rules
+| S-03 | BoJ coordination and capability gateway | Refer to capability, invocation, claim and receipt; never duplicate task mutexes
+| S-04 | Hypatia governance scanner | Preserve finding identifiers and evidence provenance; no generic policy oracle
+| S-05 | Section 09 translation honesty | Preserve claimed fidelity and its supporting evidence
+| S-06 | External evidence/continuity systems | Link provenance and temporal relations without asserting ontological identity
+|===
+
+== Minimal conformance tests
+
+The experimental profile SHOULD be tested with:
+
+. A record with distinct human and agent interpretations, preserving both.
+. A pending authorisation and not-started action; no receipt may be fabricated.
+. A completed action with an external receipt but unknown semantic validation.
+. A \`heuristic\` translation with a validation target, never silently promoted to \`exact\`.
+. A missing obligation or unknown status which is never marked satisfied by default.
+. A continuation preserving predecessor and a superseded interpretation.
+. A rejected record missing participant attribution, schema identifier or evidence provenance.
+
+== Worked example and compatibility register
+
+See link:../docs/examples/affinescript-interaction-record.adoc[AffineScript worked interaction] and link:../docs/interaction-record-compatibility.adoc[compatibility and seam register].
+
+== Status and unresolved questions
+
+The profile is suitable for review, not adoption. Open design questions include identifier allocation, privacy/redaction, signature verification, mixed-schema-version exchange, conflict resolution and whether any existing Contractile representation can host the record without a dedicated interchange document.
+
+Implementations MUST NOT claim conformance until the schema, compatibility behaviour and conformance tests are ratified and exercised.
