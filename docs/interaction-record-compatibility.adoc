@@ -29,10 +29,10 @@ It identifies reuse opportunities and missing evidence. It is *not* an implement
 |===
 | ID | Source | Status | Evidence / consequence
 | S-01 | PanLL interaction and Contractiles | Partial / unverified | `src/core/Contractiles.affine`, `AntiCrash.affine`, `BojEngine.affine`, `HypatiaEngine.affine` are TODO semantic ports. Other PanLL engines and PCC Rust implementation must be inspected before any global absence claim.
-| S-02 | BoJ MCP and coordination | Present, runtime not tested | `mcp-bridge/lib/dispatcher.js` implements routing; `mcp-bridge/lib/nickel-validator.js` allows skipped Nickel checks unless `COORD_REQUIRE_NICKEL=1`. Authorisation and envelope-validation guarantees require environment-specific tests.
+| S-03 | BoJ MCP and coordination | Present, runtime not tested | `mcp-bridge/lib/dispatcher.js` implements routing; `mcp-bridge/lib/nickel-validator.js` allows skipped Nickel checks unless `COORD_REQUIRE_NICKEL=1`. Authorisation and envelope-validation guarantees require environment-specific tests.
 | S-03 | BoJ path/task claims | Mixed | `mcp-bridge/lib/path-claims.js` explicitly describes path-overlap detection as advisory, distinct from backend task-ID locking. Do not claim filesystem exclusivity.
 | S-04 | Hypatia analysis and dispatch | Present in code; runtime not tested | `lib/pattern_analyzer.ex` and `lib/merge_orchestration/dispatcher.ex` use findings, manifest entries and safety routing. A Hypatia recommendation is not execution permission.
-| S-05 | VeriSimDB/Lithoglyph | Not assessed for this profile | No continuity feature or operational integration is implied by a record's temporal links.
+| S-06 | VeriSimDB/Lithoglyph | Not assessed for this profile | No continuity feature or operational integration is implied by a record's temporal links.
 | S-06 | Specification initialisation | Known pre-existing blocker | `REQUIRES_INITIALISATION.adoc` reports eight unresolved substitutions. Do not invent values or remove marker.
 | S-07 | Legacy A2ML vs current DEED | Compatibility debt | `0-AI-MANIFEST.a2ml` and eNSAID Section 07 contain A2ML-era guidance. DEED migrations require grammar/semantic checks and separate review, not mechanical extension.
 |===

@@ -138,11 +138,14 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "source",
+        "scope",
         "decision"
       ],
       "properties": {
         "source": {
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         },
         "decision": {
           "type": "string",
@@ -154,7 +157,8 @@
           ]
         },
         "scope": {
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         }
       }
     },
