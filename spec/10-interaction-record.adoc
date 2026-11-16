@@ -20,7 +20,7 @@ It is *not* a panel contract, a panel lifecycle, a private reasoning trace, a Bo
 
 An *interaction* is a bounded task, not a claim that a participant has a continuous identity. A *participant* is an identified source of claims or decisions, not necessarily a human. An *interpretation* is an attributable, potentially disputed account of intent or meaning. An *obligation reference* points to an authoritative external contract. An *execution receipt* is evidence reported by an executor; it does not by itself prove semantic correctness.
 
-The profile is transport-neutral and can be stored or exchanged using a format negotiated by its consumers. The supplied JSON Schema is a *candidate interchange shape*, not a new universal wire protocol.
+The profile is transport-neutral and can be stored or exchanged using a format negotiated by its consumers. The link:schemas/interaction-record-0.1.schema.json[candidate JSON Schema] checks only structural shape, not authenticated identity, authority, semantic correctness or receipt integrity. It is not a new universal wire protocol.
 
 == Relationship to existing specifications
 
