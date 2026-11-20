@@ -1,0 +1,67 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Interaction Record: Existing Contract Compatibility and Seam Register
+:toc:
+:status: Proposed; no runtime integration asserted
+
+== Purpose
+
+This register accompanies link:../spec/10-interaction-record.adoc[Section 10].
+It identifies reuse opportunities and missing evidence. It is *not* an implementation-certification report.
+
+== Existing authorities
+
+[cols="1,3,3",options="header"]
+|===
+| Source | Canonical responsibility | Proposed interaction-record approach
+| eNSAID Section 04 | Five-phase *panel* lifecycle | Do not rename or overload phases as a task lifecycle
+| eNSAID Section 05 | Structural *panel* contract | Reference panel name/version; never copy or supersede contract
+| eNSAID Section 07 | Contractile governance | Reference governing contract and version; do not independently enforce it
+| eNSAID Section 08 | Obligation status and dependency propagation | Reuse obligation IDs, status and diagnostics; never re-evaluate authoritative facts in this record
+| eNSAID Section 09 | Translation honesty (exact/conservative/heuristic/refused) | Use status vocabulary and required evidence; retain immutable status for each translation instance
+| DEED | Normative grammar in metadatastician/standards `1-formats/deed/spec/abnf/deed.abnf` (v2.0.0, checked 2026-11-16) | Refer to actual DEED files; this JSON candidate is not DEED
+| K9 component | `1-formats/k9/spec/K9-CONTRACT-SPEC.adoc` and Nickel contract | Reference authorisation/validation, not duplicate pedigree or leashes
+| K9 coordination | `2-protocols/k9-coordination/spec/COORDINATION-K9-SPEC.adoc` and its normative ABNF | Distinguish `coordination.k9` from K9 components
+|===
+
+== Integration seam register (repository inspection, 2026-11-16)
+
+[cols="1,2,2,3",options="header"]
+|===
+| ID | Source | Status | Evidence / consequence
+| S-01 | PanLL interaction and Contractiles | Partial / unverified | `src/core/Contractiles.affine`, `AntiCrash.affine`, `BojEngine.affine`, `HypatiaEngine.affine` are TODO semantic ports. Other PanLL engines and PCC Rust implementation must be inspected before any global absence claim.
+| S-03 | BoJ MCP and coordination | Present, runtime not tested | `mcp-bridge/lib/dispatcher.js` implements routing; `mcp-bridge/lib/nickel-validator.js` allows skipped Nickel checks unless `COORD_REQUIRE_NICKEL=1`. Authorisation and envelope-validation guarantees require environment-specific tests.
+| S-03 | BoJ path/task claims | Mixed | `mcp-bridge/lib/path-claims.js` explicitly describes path-overlap detection as advisory, distinct from backend task-ID locking. Do not claim filesystem exclusivity.
+| S-04 | Hypatia analysis and dispatch | Present in code; runtime not tested | `lib/pattern_analyzer.ex` and `lib/merge_orchestration/dispatcher.ex` use findings, manifest entries and safety routing. A Hypatia recommendation is not execution permission.
+| S-06 | VeriSimDB/Lithoglyph | Not assessed for this profile | No continuity feature or operational integration is implied by a record's temporal links.
+| S-06 | Specification initialisation | Known pre-existing blocker | `REQUIRES_INITIALISATION.adoc` reports eight unresolved substitutions. Do not invent values or remove marker.
+| S-07 | Legacy A2ML vs current DEED | Compatibility debt | `0-AI-MANIFEST.a2ml` and eNSAID Section 07 contain A2ML-era guidance. DEED migrations require grammar/semantic checks and separate review, not mechanical extension.
+|===
+
+== Proposed ownership decisions
+
+* eNSAID spec owns vocabulary and optional interchange contract.
+* PanLL or another conforming eNSAID interface owns interaction presentation, not the interaction's universal identity or storage.
+* BoJ owns its own capability, coordination and tool-execution boundaries. This profile may carry foreign keys to BoJ claims and receipts.
+* Hypatia owns governance analysis, not general-purpose judgement or permission.
+* Domain-specific validators own semantic evidence (for example, AffineScript compiler checks, proof ledger and capability matrix).
+* K9/DEED policy owners govern permissions and compliance; the record preserves references rather than producing authorisation.
+* Any storage or provenance substrate must establish identity and integrity separately. A predecessor link is not sufficient proof of diachronic identity.
+
+== Acceptance conditions before ratification
+
+. Specify a canonical identifier and attribution scheme; distinguish assertion from authenticated signature.
+. Complete the reference-implementation audit (PanLL PCC Rust versus AffineScript ports).
+. Prove that optional consumers can ignore this extension without breaking Sections 01–09.
+. Decide privacy, sensitive reasoning and retention boundaries.
+. Define failure and cancellation receipts, deduplication, and reconciliation for retried actions.
+. Show conformance fixtures: missing attribution, no authority, unknown obligation, heuristic translation, missing receipt, and conflicting interpretations.
+. Reconcile the initialisation marker and legacy A2ML conventions in separate scoped changes; do not hide them in this proposal.
+
+== Relevant repositories
+
+* https://github.com/hyperpolymath/ensaid-spec[eNSAID specification]
+* https://github.com/hyperpolymath/panll[PanLL]
+* https://github.com/hyperpolymath/boj-server[BoJ]
+* https://github.com/hyperpolymath/hypatia[Hypatia]
+* https://github.com/hyperpolymath/affinescript[AffineScript]
+* https://github.com/metadatastician/standards[Standards]

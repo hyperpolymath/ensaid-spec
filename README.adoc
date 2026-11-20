@@ -48,6 +48,8 @@ Engine |Draft
 
 |link:spec/09-translation-honesty.adoc[09] |Translation Honesty
 Vocabulary |Draft
+
+|link:spec/10-interaction-record.adoc[10] |Interaction Record (Experimental Extension) |Proposal
 |===
 
 == Reference Implementation
